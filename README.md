@@ -1,20 +1,20 @@
+
 # iprange
-This package helps you to work with IP ranges.
 
-IP range is a set of IP addresses. Both IPv4 and IPv6 are supported.
+This package helps you to work with IP ranges,Both IPv4 and IPv6 are supported.
 
-IP range interface:
+IP range doesn't contain network and broadcast IP addresses if the format is `IPv4 CIDR`, `IPv4 subnet mask`
+or `IPv6 CIDR`. 
 
+
+## Installation
+
+Install iprange with go mod
+
+```bash
+  go get github.com/NSObjects/iprange  
 ```
-type Range interface {
-	Family() Family
-	Contains(ip net.IP) bool
-	Size() *big.Int
-	fmt.Stringer
-	Ips() []string
-}
-```  
-
+    
 ## Supported formats
 
 - `IPv4 address` (192.0.2.1)
@@ -25,6 +25,37 @@ type Range interface {
 - `IPv6 range` (2001:db8::-2001:db8::10)
 - `IPv6 CIDR` (2001:db8::/64)
 
-IP range doesn't contain network and broadcast IP addresses if the format is `IPv4 CIDR`, `IPv4 subnet mask`
-or `IPv6 CIDR`.  
+## Usage/Examples
 
+### Range 
+
+```go
+parseRange, err := iprange.ParseRange("192.0.2.1-192.0.2.10")
+if err != nil {
+	panic(err)
+}
+fmt.Println(parseRange.Ips())
+}
+```
+
+#### CIDR
+
+```go 
+parseRange, err := iprange.ParseRange("192.0.2.1/24")
+if err != nil {
+	panic(err)
+}
+fmt.Println(parseRange.Ips())
+}
+```
+
+### subnet mask
+
+```go
+parseRange, err := iprange.ParseRange("192.0.2.1/255.255.255.255")
+if err != nil {
+	panic(err)
+}
+fmt.Println(parseRange.Ips())
+}
+```
